@@ -47,7 +47,7 @@ class PAGER():
         params['cohesion'] = str(nCoCo)
         params['pvalue'] = pvalue
         params['FDR'] = FDR
-        response = requests.post('http://discovery.informatics.uab.edu/PAGER/index.php/geneset/pagerapi', data=params)
+        response = requests.post('http://discovery.informatics.uab.edu/PAGER/index.php/', data=params)
         #print(response.request.body)
         return pd.DataFrame(response.json())
     
@@ -57,7 +57,7 @@ class PAGER():
         params = {}
         params['pag'] = ','.join(PAG_IDs)
         # Work around PAGER API form encode issue.
-        response = requests.post('http://discovery.informatics.uab.edu/PAGER/index.php/geneset/get_members_by_ids/', data=params)
+        response = requests.post('http://discovery.informatics.uab.edu/PAGER/index.php/', data=params)
         #print(response.request.body)
         return pd.DataFrame(response.json()['data'])       
     
@@ -67,7 +67,7 @@ class PAGER():
         params = {}
         params['pag'] = ','.join(PAG_IDs)
         # Work around PAGER API form encode issue.
-        response = requests.post('http://discovery.informatics.uab.edu/PAGER/index.php/pag_pag/inter_network_int_api/', data=params)
+        response = requests.post('http://discovery.informatics.uab.edu/PAGER/index.php/', data=params)
         #print(response.request.body)
         return pd.DataFrame(response.json()['data'])
     
@@ -77,23 +77,23 @@ class PAGER():
         params = {}
         params['pag'] = ','.join(PAG_IDs)
         # Work around PAGER API form encode issue.
-        response = requests.post('http://discovery.informatics.uab.edu/PAGER/index.php/pag_pag/inter_network_reg_api/', data=params)
+        response = requests.post('http://discovery.informatics.uab.edu/PAGER/index.php//', data=params)
         #print(response.request.body)
         return pd.DataFrame(response.json()['data'])
     
     # pagRankedGene is a function connected to PAGER api to retrieve RP-ranked genes with RP-score of the given PAG_IDs
     def pagRankedGene(self, PAGid):
-        response = requests.get('http://discovery.informatics.uab.edu/PAGER/index.php/genesinPAG/viewgenes/'+PAGid)
+        response = requests.get('http://discovery.informatics.uab.edu/PAGER/index.php/'+PAGid)
         return pd.DataFrame(response.json()['gene'])
     
     # pagGeneInt is a function connected to PAGER api to retrieve gene interaction network
     def pagGeneInt(self, PAGid):
-        response = requests.get('http://discovery.informatics.uab.edu/PAGER/index.php/pag_mol_mol_map/interactions/'+PAGid)
+        response = requests.get('http://discovery.informatics.uab.edu/PAGER/index.php/'+PAGid)
         return pd.DataFrame(response.json()['data'])
     
     # pagGeneReg is a function connected to PAGER api to retrieve gene regulatory network
     def pagGeneReg(self, PAGid):
-        response = requests.get('http://discovery.informatics.uab.edu/PAGER/index.php/pag_mol_mol_map/regulations/'+PAGid)
+        response = requests.get('http://discovery.informatics.uab.edu/PAGER/index.php/'+PAGid)
         return pd.DataFrame(response.json()['data'])
     
     # path_NGSEA is a function connected to PAGER api to generate the network-based GSEA result
@@ -108,6 +108,6 @@ class PAGER():
         params = {}
         params['geneExpStr'] = geneExpStr
         params['PAGsetsStr'] = PAGsetsStr
-        response = requests.post('http://discovery.informatics.uab.edu/PAGER/index.php/geneset/ngseaapi/', data=params)
+        response = requests.post('http://discovery.informatics.uab.edu/PAGER/index.php/', data=params)
         #print(response.request.body)
         return pd.DataFrame(response.json()['data'])
