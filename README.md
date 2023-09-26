@@ -2,10 +2,6 @@
 The super-PAGs will become a new and comprehensive publicly accessible non-redundant super-geneset source with curated biological context.
 
 # TO-DO List
-- [ ] Task 1
-- [x] Task 2 (Completed)
-- [ ] Task 3
-
 - [ ] Run the sample code in PAGER
 - [ ] Get familiar with the PAGER 3.0 API
 - [ ] Run the top-down optimization method in [clustering_algorithms](clustering_algorithms) 
