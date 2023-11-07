@@ -20,9 +20,11 @@ The super-PAGs will become a new and comprehensive publicly accessible non-redun
 
 # Visualization with Python
 1.[Networkx](https://networkx.org/) 
+
   ![](figures/networkx_logo.svg)
    
 2.[PyVis](https://pyvis.readthedocs.io/en/latest/index.html)
+
    ![](figures/pyvis_index.png)
 
 
