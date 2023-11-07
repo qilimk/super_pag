@@ -19,9 +19,13 @@ The super-PAGs will become a new and comprehensive publicly accessible non-redun
 ![](figures/super_pag_framework.png)
 
 # Visualization with Python
-1. ![Networks](https://networkx.org/_static/networkx_logo.svg)
+1.[Networkx](https://networkx.org/) 
+
+  ![](figures/networkx_logo.svg)
    
-3. [Pyvis](https://pyvis.readthedocs.io/en/latest/index.html)
+2.[PyVis](https://pyvis.readthedocs.io/en/latest/index.html)
+
+   ![](figures/pyvis_index.png)
 
 
 # PAGER 3.0 Dateset [API](http://discovery.informatics.uab.edu/PAGER/)
