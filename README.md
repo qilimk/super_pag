@@ -4,10 +4,12 @@ The super-PAGs will become a new and comprehensive publicly accessible non-redun
 # TO-DO List
 - [x] Run the sample code in PAGER
 - [x] Get familiar with the PAGER 3.0 API
-- [ ] Run the top-down optimization method in [clustering_algorithms](clustering_algorithms) 
-- [ ] Make the optimation code work with PAGER 3.0 API
+- [x] Run the top-down optimization method in [clustering_algorithms](clustering_algorithms) 
+- [x] Make the optimation code work with PAGER 3.0 API
 - [ ] Looking for the literature on clustering algorithms
 - [ ] Propose some new clustering methods to apply to our research
+- [ ] Visualize the subgraph, which is the result of the optimization algorithm.
+- [ ] Scraping the PAGER 3.0 to get a tree hierarchy of the PAGs like [MESH](http://discovery.informatics.uab.edu/PAGER/index.php/browse/input#mesh). 
 
 
 # Lead professor
@@ -15,6 +17,11 @@ The super-PAGs will become a new and comprehensive publicly accessible non-redun
 
 # Research Strategies
 ![](figures/super_pag_framework.png)
+
+# Visualization with Python
+1. ![Networks](https://networkx.org/_static/networkx_logo.svg)
+   
+3. [Pyvis](https://pyvis.readthedocs.io/en/latest/index.html)
 
 
 # PAGER 3.0 Dateset [API](http://discovery.informatics.uab.edu/PAGER/)
