@@ -1,0 +1,7 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"MAX000813","A","Genes up regulated by IL2 [GeneID=3558] in both primary thymocytes and T1 cells (primary thymocytes immortalized by Tax,  an HTLV 1 encoded gene).","11","null","Homo sapiens","MSigDB","252"
+"MAX000816","A","Genes with putative STAT5 [GeneID=6777] binding sites; up regulated by IL2 [GeneID=3558] only in T1 cells (primary thymocytes immortalized by Tax,  an HTLV 1 encoded gene).","9","null","Homo sapiens","MSigDB","149"
+"GEX001149","G","myelopathy,  htlv 1 associated","2","null","Homo sapiens","GAD","126"
+"MAX000815","A","Genes with putative STAT5 [GeneID=6777] binding sites; up regulated by IL2 [Gene D=3558] in both primary thymocytes and T1 cells (primary thymocytes immortalized by Tax,  an HTLV 1 encoded gene).","7","null","Homo sapiens","MSigDB","90.6"
+"MAX000814","A","Genes up regulated by IL2 [GeneID=3558] in T1 cells (primary thymocytes immortalized by Tax,  an HTLV 1 encoded gene).","12","null","Homo sapiens","MSigDB","86.8"
+"GEX000853","G","htlv 1 associated myelopathy/tropical spastic; paraparesis","1","null","Homo sapiens","GAD","0.00"

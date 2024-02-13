@@ -1,0 +1,4 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"FEX003263","G","Testicular Sugimura04 30genes Teratoma","25","15073113.0","Homo sapiens","GeneSigDB","552"
+"MAX001430","A","Genes predicting the teratoma (T) subtype of nonseminomatous male germ cell tumors (NSGCT).","39","null","Homo sapiens","MSigDB","247"
+"MAX001431","A","Genes from the 12p region that up regulated in teratoma cells compared to normal testis.","15","null","Homo sapiens","MSigDB","9.31"

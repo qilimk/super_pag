@@ -1,0 +1,8 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"MAX001393","A","Genes down regulated in AIDS related primary effusion lymphoma (PEL) samples compared to other tumor subtypes and normal B lymphocytes.","54","null","Homo sapiens","MSigDB","167"
+"GEX000044","G","aids progression","7","null","Homo sapiens","GAD","18.3"
+"GEX166756","G","AIDS progression","7","19115949.0","Homo sapiens","GWAS Catalog","18.3"
+"MAX001394","A","Genes up regulated in AIDS related primary effusion lymphoma (PEL) samples compared to other tumor subtypes and normal B lymphocytes.","49","null","Homo sapiens","MSigDB","12.7"
+"GEX000043","G","aids","5","null","Homo sapiens","GAD","0.00"
+"GEX166896","G","AIDS","3","19754311.0","Homo sapiens","GWAS Catalog","0.00"
+"GEX167321","G","AIDS progression","6","21502085.0","Homo sapiens","GWAS Catalog","0.00"

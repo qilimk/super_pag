@@ -1,0 +1,7 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"MAX001050","A","Genes changed in the B cell chronic lymphocytic leukemia (B CLL) with deletions in the  6q21 region.","12","null","Homo sapiens","MSigDB","43.6"
+"MAX001052","A","Genes changed in the B cell chronic lymphocytic leukemia (B CLL) with mutations in the variable immunoglobulin veriable heavy chain (VH) genes.","17","null","Homo sapiens","MSigDB","10.7"
+"MAX001049","A","Genes changed in the B cell chronic lymphocytic leukemia (B CLL) with deletions in the 17p13 region.","20","null","Homo sapiens","MSigDB","10.3"
+"MAX001048","A","Genes changed in the B cell chronic lymphocytic leukemia (B CLL) with deletions in the 13q14 region.","24","null","Homo sapiens","MSigDB","7.33"
+"MAX001051","A","Genes changed in the B cell chronic lymphocytic leukemia (B CLL) with trisomy of chromosome 12.","22","null","Homo sapiens","MSigDB","3.23"
+"MAX001047","A","Genes changed in the B cell chronic lymphocytic leukemia (B CLL) with deletions in the 11q23 region.","21","null","Homo sapiens","MSigDB","0.00"

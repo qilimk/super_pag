@@ -1,0 +1,5 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"GEX166939","G","Leprosy","3","20018961.0","Homo sapiens","GWAS Catalog","53.8"
+"GEX000986","G","leprosy","37","null","Homo sapiens","GAD","27.2"
+"GEX000987","G","leprosy,  lepromatous","2","null","Homo sapiens","GAD","0.00"
+"GEX167511","G","Leprosy","4","22019778.0","Homo sapiens","GWAS Catalog","0.00"

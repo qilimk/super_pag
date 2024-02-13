@@ -1,0 +1,4 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"MAX001421","A","Genes from the 12p region that were up regulated in choriocarcinoma cells compared to normal testis.","6","null","Homo sapiens","MSigDB","38.9"
+"MAX001419","A","Genes predicting the choriocarcinoma (CC) of nonseminomatous male germ cell tumors (NSGCT).","6","null","Homo sapiens","MSigDB","17.2"
+"MAX001420","A","Genes from the 12p region that were down regulated in choriocarcinoma cells compared to normal testis.","9","null","Homo sapiens","MSigDB","5.11"

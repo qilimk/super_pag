@@ -1,0 +1,8 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"GEX001240","G","osteoporosis,  postmenopausal","3","null","Homo sapiens","GAD","134"
+"GEX001241","G","osteoporosis,  postmenopausal; bone density; hormone disturbance","2","null","Homo sapiens","GAD","126"
+"TAX000057","A","Genes annotated by the GO term GO:0046849. The continuous turnover of bone matrix and mineral that involves first,  an increase in resorption (osteoclastic activity) and later,  reactive bone formation (osteoblastic activity). The process of bone remodeling takes place in the adult skeleton at discrete foci. The process ensures the mechanical integrity of the skeleton throughout life and plays an important role in calcium homeostasis. An imbalance in the regulation of bone resorption and bone formation results in many of the metabolic bone diseases,  such as osteoporosis.","29","null","Homo sapiens","MSigDB","59.0"
+"GEX000294","G","bone density; osteoporosis","4","null","Homo sapiens","GAD","35.8"
+"GEX001239","G","osteoporosis","74","null","Homo sapiens","GAD","4.70"
+"GEX001214","G","obesity and osteoporosis","1","null","Homo sapiens","GAD","0.00"
+"GEX167062","G","Osteoporosis","7","20548944.0","Homo sapiens","GWAS Catalog","0.00"

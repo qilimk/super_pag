@@ -1,0 +1,8 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"GEX001397","G","radiographically evident osteoarthritis","2","null","Homo sapiens","GAD","126"
+"GEX001234","G","osteoarthritis","22","null","Homo sapiens","GAD","110"
+"GEX166651","G","Knee osteoarthritis","3","18471798.0","Homo sapiens","GWAS Catalog","59.7"
+"GEX167012","G","Knee osteoarthritis","3","20305777.0","Homo sapiens","GWAS Catalog","59.7"
+"GEX000969","G","knee osteoarthritis","7","null","Homo sapiens","GAD","48.2"
+"GEX001235","G","osteoarthritis,  knee","4","null","Homo sapiens","GAD","0.00"
+"GEX167751","G","Osteoarthritis","5","22763110.0","Homo sapiens","GWAS Catalog","0.00"

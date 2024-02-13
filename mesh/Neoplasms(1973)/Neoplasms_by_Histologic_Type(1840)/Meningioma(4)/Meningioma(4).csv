@@ -1,0 +1,5 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"GEX001099","G","meningeal neoplasms|meningioma","13","null","Homo sapiens","GAD","104"
+"MAX000499","A","Genes down regulated in meningioma samples positive for PGR [GeneID=5241] compared to those without the receptor.","12","null","Homo sapiens","MSigDB","4.20"
+"GEX001100","G","meningioma","2","null","Homo sapiens","GAD","0.00"
+"MAX000500","A","Genes up regulated in meningioma samples positive for PGR [GeneID=5241] compared to those without the receptor.","8","null","Homo sapiens","MSigDB","0.00"

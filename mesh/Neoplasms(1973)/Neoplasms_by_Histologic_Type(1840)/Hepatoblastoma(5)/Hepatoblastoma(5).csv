@@ -1,0 +1,6 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"MAX000362","A","Genes up regulated in robust Cluster 2 (rC2) of hepatoblastoma samples compared to those in the robust Cluster 1 (rC1).","557","null","Homo sapiens","MSigDB","2.30e+3"
+"MAX000363","A","Genes down regulated in hepatoblastoma samples compared to normal liver tissue.","251","null","Homo sapiens","MSigDB","65.5"
+"MAX000365","A","Genes up regulated in hepatoblastoma samples compared to normal liver tissue.","193","null","Homo sapiens","MSigDB","36.5"
+"MAX000364","A","Genes whose expression classifies hepatoblastoma tumors as belonging to either rC1 or rC2 subtypes and whose expression predicts poor survival.","16","null","Homo sapiens","MSigDB","19.0"
+"MAX000361","A","Genes down regulated in robust Cluster 2 (rC2) of hepatoblastoma samples compared to those in the robust Cluster 1 (rC1).","200","null","Homo sapiens","MSigDB","15.7"

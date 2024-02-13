@@ -1,0 +1,4 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"WIG000008","P","Cellular roles of Anthrax toxin","17","null","Homo sapiens","MSigDB","1.21e+3"
+"WIG001734","P","Mechanism of Anthrax Toxins","20","null","Homo sapiens","Protein Lounge","215"
+"GEX167714","G","Immune response to anthrax vaccine","13","22658931.0","Homo sapiens","GWAS Catalog","2.90"

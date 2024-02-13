@@ -1,0 +1,5 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"MAX002096","A","Top 20 positive significant genes associated with leiomyosarcoma tumors expressing muscle gene cluster with CNN1 [GeneID=1264].","18","null","Homo sapiens","MSigDB","328"
+"MAX002097","A","Top 20 negative significant genes associated with CNN1 [GeneID=1264] negative leiomyosarcoma tumors.","16","null","Homo sapiens","MSigDB","7.04"
+"MAX002098","A","Top 20 positive significant genes associated with CNN1 [GeneID=1264] negative leiomyosarcoma tumors.","17","null","Homo sapiens","MSigDB","7.04"
+"MAX002095","A","Top 20 negative significant genes associated with leiomyosarcoma tumors expressing muscle gene cluster with CNN1 [GeneID=1264].","20","null","Homo sapiens","MSigDB","2.93"

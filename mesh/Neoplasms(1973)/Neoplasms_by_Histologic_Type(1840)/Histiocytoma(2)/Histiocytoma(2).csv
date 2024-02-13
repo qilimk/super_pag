@@ -1,0 +1,4 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"MAX002102","A","Top 20 positive significant genes associated with malignant fibrous histiocytoma tumors.","17","null","Homo sapiens","MSigDB","102"
+"MAX002101","A","Top 20 negative significant genes associated with malignant fibrous histiocytoma tumors.","15","null","Homo sapiens","MSigDB","7.04"
+"GAX000445","A","Mesothelial cell in lung's normal cell","5","29590628","Mus musculus","CellMarker","0.00"

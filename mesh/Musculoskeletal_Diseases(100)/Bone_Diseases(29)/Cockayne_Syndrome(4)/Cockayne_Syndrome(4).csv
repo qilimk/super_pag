@@ -1,0 +1,5 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"MAX001483","A","Genes up regulated in response to hydrogen peroxide [PubChem=784] in CS B cells (Cockayne syndrome fibroblast,  CS) expressing ERCC6 [GeneID=2074] off a plasmid vector.","67","null","Homo sapiens","MSigDB","41.5"
+"MAX001484","A","Genes down regulated in CS B cells (Cockayne syndrome fibroblast,  CS) with defficient ERCC6 [GeneID=2074] in response to hydrogen peroxide [PubChem=784].","16","null","Homo sapiens","MSigDB","17.3"
+"MAX002083","A","Genes down regulated in Cockayne syndrome fibroblasts rescued by expression of ERCC6 [GeneID=2074] off a plasmid vector.","36","null","Homo sapiens","MSigDB","3.86"
+"MAX002084","A","Genes up regulated in Cockayne syndrome fibroblasts rescued by expression of ERCC6 [GeneID=2074] off a plasmid vector.","22","null","Homo sapiens","MSigDB","2.52"

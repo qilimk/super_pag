@@ -1,0 +1,3 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"MAX002580","A","Genes up regulated in invasive ductal carcinoma (IDC) relative to ductal carcinoma in situ (DCIS,  non invasive).","332","null","Homo sapiens","MSigDB","222"
+"MAX002579","A","Genes down regulated in invasive ductal carcinoma (IDC) relative to ductal carcinoma in situ (DCIS,  non invasive).","82","null","Homo sapiens","MSigDB","4.42"

@@ -1,0 +1,7 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"WIG000154","P","Regulation of retinoblastoma protein","65","null","Homo sapiens","MSigDB","3.21e+3"
+"FAX000326","A","Genes with promoter regions [ 2kb, 2kb] around transcription start site containing the motif SGCGSSAAA which matches annotation for E2F1: E2F transcription factor 1 TFDP1: transcription factor Dp 1 RB1: retinoblastoma 1 (including osteosarcoma)","153","null","Homo sapiens","MSigDB","430"
+"FAX000468","A","Genes with promoter regions [ 2kb, 2kb] around transcription start site containing the motif TTTSGCGC which matches annotation for E2F1: E2F transcription factor 1 TFDP1: transcription factor Dp 1 RB1: retinoblastoma 1 (including osteosarcoma)","212","null","Homo sapiens","MSigDB","345"
+"MAX000979","A","Genes changed in retinoblastoma tumors with respect to chromosome 6p amplifications.","14","null","Homo sapiens","MSigDB","55.2"
+"MAX000980","A","Genes from 16q24 region up regulated in retinoblastoma tumors with 16q24 LOH (loss of heterozygocity) compared to those without the LOH.","15","null","Homo sapiens","MSigDB","1.74"
+"GEX001439","G","retinoblastoma","1","null","Homo sapiens","GAD","0.00"

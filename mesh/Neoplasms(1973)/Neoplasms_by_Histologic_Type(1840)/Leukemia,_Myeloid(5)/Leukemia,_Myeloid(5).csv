@@ -1,0 +1,5 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"GEX000994","G","leukemia,  myeloid","11","null","Homo sapiens","GAD","207"
+"GEX000995","G","leukemia,  myeloid,  acute","7","null","Homo sapiens","GAD","197"
+"GEX000997","G","leukemia,  myeloid|translocation,  genetic","3","null","Homo sapiens","GAD","134"
+"GEX000246","G","birth weight|leukemia|leukemia,  myeloid,  acute|precursor cell lymphoblastic leukemia lymphoma","3","null","Homo sapiens","GAD","0.00"

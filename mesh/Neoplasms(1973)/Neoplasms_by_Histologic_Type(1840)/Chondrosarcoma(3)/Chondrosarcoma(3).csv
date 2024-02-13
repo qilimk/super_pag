@@ -1,0 +1,4 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"MAX001414","A","Genes up regulated in HSC 2/8 cells (chondrosarcoma) under hypoxic conditions.","7","null","Homo sapiens","MSigDB","489"
+"MAX001739","A","Genes down regulated in chondrosarcoma and ovarian carcinoma cell lines which developed resistance to trabectedin [PubChem=3199].","46","null","Homo sapiens","MSigDB","48.2"
+"MAX001740","A","Genes up regulated in chondrosarcoma and ovarian carcinoma cell lines which developed resistance to trabectedin [PubChem=3199].","21","null","Homo sapiens","MSigDB","7.34"

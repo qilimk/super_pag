@@ -1,0 +1,5 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"GEX000332","G","bronchopulmonary aspergillosis","2","null","Homo sapiens","GAD","126"
+"GEX000150","G","aspergillosis","2","null","Homo sapiens","GAD","126"
+"GEX000333","G","bronchopulmonary aspergillosis pulmonary aspergillosis","2","null","Homo sapiens","GAD","0.00"
+"GAX000469","A","B cell in spleen's normal cell","17","24531970","Mus musculus","CellMarker","0.00"

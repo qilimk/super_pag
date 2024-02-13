@@ -1,0 +1,7 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"GEX000090","G","anaplastic astrocytoma; glioblastoma multiforme","2","null","Homo sapiens","GAD","126"
+"MAX000508","A","Genes down regulated in pilocytic astrocytoma compared to glioblastoma samples.","28","null","Homo sapiens","MSigDB","73.9"
+"MAX000509","A","Genes up regulated in pilocytic astrocytoma compared to glioblastoma samples.","35","null","Homo sapiens","MSigDB","37.9"
+"MAX002639","A","Genes up regulated in pilocytic astrocytoma (PA) from supratentorial regions compared to the infratentorial PA tumors.","22","null","Homo sapiens","MSigDB","20.6"
+"MAX002637","A","Genes up regulated in pilocytic astrocytoma (PA) samples from patients with type 1 neurofibromatosis syndrom (NF1) compared to the PA tumors from non NF1 patients.","3","null","Homo sapiens","MSigDB","0.00"
+"MAX002638","A","Genes down regulated in pilocytic astrocytoma (PA) from supratentorial regions compared to the infratentorial PA tumors.","7","null","Homo sapiens","MSigDB","0.00"

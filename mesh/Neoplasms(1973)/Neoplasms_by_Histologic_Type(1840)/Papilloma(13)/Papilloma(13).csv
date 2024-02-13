@@ -1,0 +1,5 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"MAX002352","A","Up regulated genes in cervical carcinoma and head and neck tumors positive for human papilloma virus (HPV) compared to those negative for HPV.","87","null","Homo sapiens","MSigDB","261"
+"MAX000405","A","Genes down regulated in normal keratinocytes immortalized by infection with the high risk HPV31 (human papilloma virus) strain.","63","null","Homo sapiens","MSigDB","202"
+"MAX002351","A","Down regulated genes in cervical carcinoma and head and neck tumors positive for human papilloma virus (HPV) compared to those negative for HPV.","10","null","Homo sapiens","MSigDB","35.9"
+"MAX000406","A","Genes up regulated in normal keratinocytes immortalized by infection with the high risk HPV31 (human papilloma virus) strain.","74","null","Homo sapiens","MSigDB","0.00"

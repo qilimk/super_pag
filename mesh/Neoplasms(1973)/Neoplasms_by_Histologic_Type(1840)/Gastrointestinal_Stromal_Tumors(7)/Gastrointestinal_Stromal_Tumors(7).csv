@@ -1,0 +1,8 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"MAX002091","A","Top 20 genes whose down regulation correlated with gastrointestinal stromal tumors (GIST) and synovial sarcoma compared to other tumors.","20","null","Homo sapiens","MSigDB","297"
+"MAX002094","A","Top 20 genes whose up regulation correlated with gastrointestinal stromal tumors (GIST) compared to synovial sarcoma.","19","null","Homo sapiens","MSigDB","38.8"
+"MAX001324","A","Genes up regulated in gastrointestinal stromal tumors (GIST) with PDGFRA [GeneID=5156] mutations.","48","null","Homo sapiens","MSigDB","24.6"
+"MAX002093","A","Top 20 genes whose down regulation correlated with gastrointestinal stromal tumors (GIST) compared to synovial sarcoma.","18","null","Homo sapiens","MSigDB","8.82"
+"MAX002092","A","Top 20 genes whose up regulation correlated with gastrointestinal stromal tumors (GIST) and synovial sarcoma compared to other tumors.","19","null","Homo sapiens","MSigDB","8.29"
+"MAX002090","A","A cluster of genes specifically up regulated in gastrointestinal stromal tumors (GIST).","86","null","Homo sapiens","MSigDB","3.01"
+"MAX001323","A","Genes down regulated in gastrointestinal stromal tumors (GIST) with PDGFRA [GeneID=5156] mutations.","5","null","Homo sapiens","MSigDB","0.00"

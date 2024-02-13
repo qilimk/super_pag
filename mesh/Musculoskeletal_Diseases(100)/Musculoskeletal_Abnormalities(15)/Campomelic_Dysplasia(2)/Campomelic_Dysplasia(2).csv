@@ -1,0 +1,3 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"FAX000245","A","Genes with promoter regions [ 2kb, 2kb] around transcription start site containing the motif CATTGTYY which matches annotation for SOX9: SRY (sex determining region Y) box 9 (campomelic dysplasia,  autosomal sex reversal)","337","null","Homo sapiens","MSigDB","17.4"
+"FAX000733","A","Genes with promoter regions [ 2kb, 2kb] around transcription start site containing the motif NNNNAACAATRGNN which matches annotation for SOX9: SRY (sex determining region Y) box 9 (campomelic dysplasia,  autosomal sex reversal)","224","null","Homo sapiens","MSigDB","16.4"

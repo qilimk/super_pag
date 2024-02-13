@@ -1,0 +1,4 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"TAX000874","A","Genes annotated by the GO term GO:0044430. Any constituent part of the cytoskeleton,  a cellular scaffolding or skeleton that maintains cell shape,  enables some cell motion (using structures such as flagella and cilia),  and plays important roles in both intra cellular transport (e.g. the movement of vesicles and organelles) and cellular division. Includes constituent parts of intermediate filaments,  microfilaments,  microtubules,  and the microtrabecular lattice.","230","null","Homo sapiens","MSigDB","1.03e+3"
+"MAX003264","A","Genes up regulated in hepatocellular carcinoma (HCC) with intra hepatic metastasis compared to the non metastatic tumors.","25","null","Homo sapiens","MSigDB","7.16"
+"GEX000935","G","intra abdominal fat","11","null","Homo sapiens","GAD","0.00"

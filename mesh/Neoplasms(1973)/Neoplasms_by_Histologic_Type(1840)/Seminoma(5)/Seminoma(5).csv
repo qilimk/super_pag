@@ -1,0 +1,6 @@
+"PAG ID","PAG Type","PAG Name","Size","Pubmed Reference","Organism","Data source","cohension"
+"MAX001429","A","Genes from the 12p region that were up regulated in seminoma tumors compared to normal testis.","39","null","Homo sapiens","MSigDB","21.8"
+"MAX001427","A","Top 25 most highly expressed genes in embryonic carcinoma relative to seminoma tumors.","21","null","Homo sapiens","MSigDB","21.4"
+"MAX001428","A","Genes from the 12p region that were down regulated in seminoma tumors compared to normal testis.","9","null","Homo sapiens","MSigDB","8.56"
+"FEX003157","G","StemCell Port09 10genes Seminoma/NormalTissue","7","19945308.0","Homo sapiens","GeneSigDB","0.00"
+"MAX001426","A","Top 25 most highly expressed genes in seminoma relative to embryonic carcinoma tumors.","24","null","Homo sapiens","MSigDB","0.00"
