@@ -1,12 +1,16 @@
 import argparse
+import textwrap
 import pandas as pd
 import seaborn as sns
+import matplotlib
+matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import networkx as nx
 import community as community_louvain
 from networkx.algorithms.community import girvan_newman
 from sklearn.cluster import SpectralClustering
 from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score
+
 
 ALGORITHMS = ['louvain', 'girvan_newman', 'spectral_clustering']
 
@@ -167,6 +171,9 @@ def generate_all_sbm_graphs(sizes=None):
     if sizes is None:
         sizes = [50, 50]
 
+    exp = f"sbm_{'_'.join(str(item) for item in sizes)}"
+    save_csv_name = f'{exp}_distribution_of_connection_results.csv'
+
     community_dict = {}
     columns = ['p_within', 'p_between', 'node', 'connection']
     connection_df = pd.DataFrame(columns=columns)
@@ -196,11 +203,19 @@ def generate_all_sbm_graphs(sizes=None):
 
                 print(f"Edges among neighbors of vertex {target_vertex}: {edges}")
 
-            plot_communities_w_names(G, community_dict, f"p_within_{p_within}_p_between_{p_between}")
+            plot_communities_w_names(G, community_dict, f"{exp}_p_within_{p_within}_p_between_{p_between}")
 
-    connection_df.to_csv('distribution_of_connection_results.csv', index=False)
+    connection_df.to_csv(save_csv_name, index=False)
 
-def plot_all_connection_dist(df):
+def plot_all_connection_dist(df, exp):
+
+    desired_width_px = 1200
+    desired_height_px = 800
+    dpi = 100  # Desired DPI
+
+    # Calculate figure size in inches
+    figsize_inches = (desired_width_px / dpi, desired_height_px / dpi)
+
     df['node'] = df['node'].astype(int)
     for i in range(10):
         p_within = (i+1) / 10
@@ -208,15 +223,17 @@ def plot_all_connection_dist(df):
             p_between= (j+1) / 10
             
             filtered_df = df[(df['p_within'] == p_within) & (df['p_between'] == p_between)][['node', 'connection']]
-            
-            plt.figure(figsize=(12, 6))
+            plt.figure(figsize=figsize_inches)
             sns.displot(filtered_df, x="connection", kind="kde", fill=True)
             # sns.barplot(x="node", y="connection", data=filtered_df, palette="viridis")
             plt.xlim(0, 1)
-            plt.title(f"Distribution of Connection Values for p_within={p_within} and p_between={p_between}")
+            title_text = f"Distribution of Connection Values for p_within={p_within} and p_between={p_between}"
+            wrapped_title = textwrap.fill(title_text, width=50)
+            plt.title(wrapped_title)
             plt.xlabel("Connection Strength")
             plt.ylabel("Density")
-            plt.savefig(f"p_within_{p_within}_p_between_{p_between}_distribution.jpg")
+            plt.tight_layout()
+            plt.savefig(f"{exp}_p_within_{p_within}_p_between_{p_between}_distribution.jpg", dpi=dpi)
             plt.close()
 
 def main():
@@ -230,13 +247,21 @@ def main():
 
     # multiple evaluations 
     print(args.sizes)
-    exp, save_csv_name = eval_cross_all_for_3_methods(args)
+    # exp, save_csv_name = eval_cross_all_for_3_methods(args)
+    # plot_heatmaps(save_csv_name, exp)
 
-    plot_heatmaps(save_csv_name, exp)
+    exp = f"sbm_{'_'.join(str(item) for item in args.sizes)}"
+    save_csv_name = f'{exp}_distribution_of_connection_results.csv'
+    
+    generate_all_sbm_graphs(args.sizes)
+    df = pd.read_csv(save_csv_name)
+    plot_all_connection_dist(df, exp)
+
+
 
 if __name__ == "__main__":
 
-    main()
+    main() 
 
 # Example usage:
 # python communities_detection.py --sizes 50 50 --p_within 0.5 --p_between
