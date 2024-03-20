@@ -22,7 +22,7 @@ from PAGER.PAGER import PAGER
 PAGER = PAGER()
 VERI_GRAGH_PATH = '2024_graph_w_verification.graphml'
 WHOLE_GRAPH_PATH = '2024_GO_wholegraph.graphml'
-META_DATA_PATH = 'pager_3_all_metadata.csv'
+META_DATA_PATH = 'filterpaginf2024.csv'   # 'pager_3_all_metadata.csv'
 
 
 class GraphAnalysis:
@@ -396,66 +396,6 @@ def table_2_graph_with_verfication(file_path, valid_nodes, part_name):
     nx.write_graphml(G, f"2024_{part_name}_graph_w_verification.graphml")
 
 
-def eval_llm_clustering():
-    G, true_labels, true_label_dict = extract_groundtrue_dataset()
-    
-    df, desc_list = find_validate_set(graph_path = 'subgraph_GO:0140096_GO:0051239.graphml')
-
-    df_no_root = df[~df['NAME'].str.contains('GO:0006811')]
-    df_no_root['KEYNAME'] = df_no_root['NAME'].str.split(" ").str[0]
-
-    df_no_root['NAMEDESC'] = df_no_root['NAME'].apply(lambda x: ' '.join(x.split(' ')[2:]) if len(x.split(' ')) > 2 else 'none')
-    # df_no_root['EMBEDDING'] = df_no_root['DESCRIPTION'].apply(get_embedding)
-    df_no_root['EMBEDDING'] = df_no_root['NAMEDESC'].apply(get_embedding)
-    # df_no_root['EMBEDDING'] = (df_no_root['NAMEDESC'] + ' ' + df_no_root['DESCRIPTION']).apply(get_embedding)
-    
-
-    df_sorted = df_no_root.sort_values(by='KEYNAME')
-    pags_embeddings = np.stack(df_sorted['EMBEDDING'].values)
-
-    # Normalize the embeddings to unit length
-    pags_embeddings = pags_embeddings / np.linalg.norm(pags_embeddings, axis=1, keepdims=True)
-
-    # K-Means
-    start_time = time.time()
-    kmeans = KMeans(n_clusters=2)  # Adjust n_clusters based on your dataset
-    kmeans_predictions = kmeans.fit_predict(pags_embeddings)
-    kmeans_ari = adjusted_rand_score(true_labels, kmeans_predictions)
-    end_time = time.time()
-    duration = end_time - start_time
-    print(f"ARI Score K-Means: {kmeans_ari}, time spent: {duration}")
-
-
-    # Agglomerative Clustering
-    start_time = time.time()
-    agglo = AgglomerativeClustering(n_clusters=2)  # Adjust n_clusters as needed
-    agglo_predictions = agglo.fit_predict(pags_embeddings)
-    agglo_ari = adjusted_rand_score(true_labels, agglo_predictions)
-    end_time = time.time()
-    duration = end_time - start_time
-    print(f"ARI Score Agglomerative: {agglo_ari}, time spent: {duration}")
-
-    # DBSCAN
-    start_time = time.time()
-    dbscan = DBSCAN(eps=0.1, min_samples=40)  # Adjust eps and min_samples based on your dataset
-    dbscan_predictions = dbscan.fit_predict(pags_embeddings)
-    dbscan_ari = adjusted_rand_score(true_labels, dbscan_predictions)
-    end_time = time.time()
-    duration = end_time - start_time
-    print(f"ARI Score DBSCAN: {dbscan_ari}, time spent: {duration}")
-
-    # HDBSCAN
-
-    # Apply HDBSCAN clustering
-    start_time = time.time()
-    hdbscan_algo = hdbscan.HDBSCAN(min_cluster_size=5, gen_min_span_tree=True)
-    hdbscan_predictions = hdbscan_algo.fit_predict(pags_embeddings)
-    hdbscan_ari = adjusted_rand_score(true_labels, hdbscan_predictions)
-    end_time = time.time()
-    duration = end_time - start_time
-    print(f"ARI Score HDBSCAN: {hdbscan_ari}, time spent: {duration}")
-
-
 def extract_groundtrue_dataset(graph_path = 'subgraph_GO:0140096_GO:0051239.graphml'):
 
     G = nx.read_graphml(graph_path)
@@ -702,6 +642,20 @@ def have_same_parent(G, node1, node2):
         return True
     else:
         return False
+    
+def all_have_different_parent(G, nodes):
+    # Initialize a dictionary to hold the parent of each node
+    parents = {}
+
+    # Populate the parents dictionary by iterating over the edges
+    for parent, child in G.edges():
+        parents[child] = parent
+
+    # Use a set to keep track of unique parents of the nodes in the list
+    unique_parents = set(parents[node] for node in nodes if node in parents)
+
+    # If the set of unique parents has exactly one element, all nodes have the same parent
+    return len(unique_parents) == len(nodes)
 
 
 # step 1: verify the relationship table with the meta data of GOA dataset
@@ -709,7 +663,7 @@ def have_same_parent(G, node1, node2):
 # step 2: find out the level 2 nodes and the outdegree within the range of 50 to 100
 # sort_outdegree_in_G()
 
-def filter_exp_dataset(target_graph_path='2024_biological_process_graph_w_verification.graphml', taget_graph_root = 'GO:0008150'):
+def filter_exp_dataset(target_graph_path='2024_biological_process_graph_w_verification.graphml', taget_graph_root = 'GO:0008150', num_of_groups = 2):
     '''
     biological_process: 'GO:0008150'
     molecular_function: 'GO:0003674'
@@ -730,15 +684,43 @@ def filter_exp_dataset(target_graph_path='2024_biological_process_graph_w_verifi
             level_2_nodes_dict[value].append(key)
 
     for level, nodes in level_2_nodes_dict.items():
-        pairs = list(itertools.combinations(nodes, 2))
-        for node1, node2 in pairs:
-            if not have_same_parent(G_GOA, node1, node2):
-                exp_candidates.append([node1, node2])
+        group_list = list(itertools.combinations(nodes, num_of_groups))
+        for nodes in group_list:
+            if all_have_different_parent(G_GOA, nodes):
+                exp_candidates.append(nodes)
             else:
-                print(f"The {node1} and {node2} share the same parent!!")
+                print(f"The {nodes} share the same parent!!")
 
     print(len(exp_candidates))
     return exp_candidates
+
+import networkx as nx
+
+def gen_gt_labels(graph_path, roots_list):
+
+    G = nx.read_graphml(graph_path)
+    labels_dict = {}
+    all_gt_nodes = []
+
+    # Assign labels starting from 0 for each root and its neighbors
+    for label, root in enumerate(roots_list):
+        labels_dict[root] = label
+        all_gt_nodes.append(root)
+        for node in nx.neighbors(G, root):
+            # Avoid re-labeling a node if it has already been labeled
+            if node not in labels_dict:
+                labels_dict[node] = label
+                all_gt_nodes.append(node)
+
+    # Ensure uniqueness of nodes
+    all_gt_nodes = list(set(all_gt_nodes))
+    
+    # Generate labels for all nodes, sorted to ensure consistent order
+    labels = [labels_dict.get(node, -1) for node in sorted(all_gt_nodes)]
+
+    return all_gt_nodes, labels, labels_dict
+
+
 
 def gen_gt_binary_dataset(graph_path, root1, root2):
     G = nx.read_graphml(graph_path)
@@ -746,20 +728,20 @@ def gen_gt_binary_dataset(graph_path, root1, root2):
     all_gt_binary_nodes = [root1, root2]
 
     labels_dict[root1] = 0
-    for node in nx.descendants(G, root1):
+    for node in nx.neighbors(G, root1):
         labels_dict[node] = 0
         all_gt_binary_nodes.append(node)
 
     labels_dict[root2] = 1
-    for node in nx.descendants(G, root2):
+    for node in nx.neighbors(G, root2):
         labels_dict[node] = 1
         all_gt_binary_nodes.append(node)
 
-    labels = [labels_dict.get(node, -1) for node in sorted(G.nodes())]
+    labels = [labels_dict.get(node, -1) for node in sorted(all_gt_binary_nodes)]
 
     return all_gt_binary_nodes, labels, labels_dict
 
-def find_gt_binary_valid_set(valid_nodes):
+def find_gt_valid_set(valid_nodes):
     
     df = pd.read_csv(META_DATA_PATH)
     column_to_check = 'NAME'
@@ -797,10 +779,12 @@ def perform_clustering(algo, name, embeddings, true_labels):
 
     return ari_score, duration
 
-def eval_llm_clustering(graph_path, root1, root2):
-    # Assuming other functions like `extract_groundtrue_dataset` and `find_validate_set` are defined elsewhere
-    valid_nodes, true_labels, _ = gen_gt_binary_dataset(graph_path, root1, root2)
-    df, _ = find_gt_binary_valid_set(valid_nodes)
+def eval_llm_clustering(graph_path, roots_list):
+    
+    valid_nodes, true_labels, _ = gen_gt_labels(graph_path, roots_list)
+    print(len(valid_nodes))
+    nodes_dict = {f"Root{label}": root for label, root in enumerate(roots_list)}
+    df, _ = find_gt_valid_set(valid_nodes)
 
     # Data preprocessing
     df['KEYNAME'] = df['NAME'].str.split(" ").str[0]
@@ -809,15 +793,7 @@ def eval_llm_clustering(graph_path, root1, root2):
     df_sorted = df.sort_values(by='KEYNAME')
     pags_embeddings = get_normalized_embeddings(df_sorted)
 
-    # Clustering algorithms setup
-    clustering_algorithms = [
-        KMeans(n_clusters=2, random_state=42),
-        AgglomerativeClustering(n_clusters=2),
-        DBSCAN(eps=0.1, min_samples=40),
-        hdbscan.HDBSCAN(min_cluster_size=5, gen_min_span_tree=True)
-    ]
-
-        # Clustering and evaluation
+    # Clustering and evaluation
     clustering_algorithms = {
         'K-Means': KMeans(n_clusters=2),
         'Agglomerative': AgglomerativeClustering(n_clusters=2),
@@ -829,19 +805,43 @@ def eval_llm_clustering(graph_path, root1, root2):
 
     # Perform clustering with each algorithm
     for name, algo in clustering_algorithms.items():
+        print({f"Start algo {name} evaluation..."})
         ari_score, duration = perform_clustering(algo, name, pags_embeddings, true_labels)
-        results.append({'Algorithm': name, 'ARI Score': ari_score, 'Duration': duration, 'Root1': root1, 'Root2': root2})
+        result_dict = {'Algorithm': name, 'ARI Score': ari_score, 'Duration': duration, 'Sample size': len(valid_nodes)}
+        result_dict.update(nodes_dict)
+        results.append(result_dict)
+    
     return results
 
 bp_graph_path ='2024_biological_process_graph_w_verification.graphml'
-exp_candidates = filter_exp_dataset()
+num_of_groups = 3
+exp_candidates = filter_exp_dataset(num_of_groups=num_of_groups)
+
 results = []
-for root1, root2 in exp_candidates:
-    results.extend(eval_llm_clustering(bp_graph_path, root1, root2))    
+for roots in exp_candidates:
+    print(f"Roots: {roots}.")
+    results.extend(eval_llm_clustering(bp_graph_path, roots))    
 
 # Convert results to DataFrame and save to CSV
 results_df = pd.DataFrame(results)
-results_df.to_csv('clustering_results.csv', index=False)
+results_df.to_csv(f'clustering_{num_of_groups}_groups_results.csv', index=False)
+
+def ari_results_box_plots(csv_file_path = 'clustering_results.csv'):
+    
+    # Read the CSV file into a DataFrame
+    df = pd.read_csv(csv_file_path)
+    # Plotting
+    plt.figure(figsize=(10, 6))
+    plt.title("ARI Scores by Clustering Algorithm")
+    boxplot = df.boxplot(column='ARI Score', by='Algorithm', grid=False)
+    plt.suptitle('')
+    plt.xlabel('Algorithm')
+    plt.ylabel('ARI Score')
+    plt.xticks(rotation=60)
+    plt.savefig(f"{csv_file_path.split('.')[0]}.jpg")
+
+# ari_results_box_plots()
+
 
         
 # eval_on_m_type_relation()
