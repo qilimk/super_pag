@@ -3,13 +3,17 @@ import textwrap
 import pandas as pd
 import seaborn as sns
 import matplotlib
-matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import networkx as nx
 import community as community_louvain
+import numpy as np
+import ast
+
 from networkx.algorithms.community import girvan_newman
 from sklearn.cluster import SpectralClustering
-from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score
+from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score, mean_squared_error, r2_score
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
 
 
 ALGORITHMS = ['louvain', 'girvan_newman', 'spectral_clustering']
@@ -236,6 +240,121 @@ def plot_all_connection_dist(df, exp):
             plt.savefig(f"{exp}_p_within_{p_within}_p_between_{p_between}_distribution.jpg", dpi=dpi)
             plt.close()
 
+def merge_clustering_results():
+
+    df = pd.DataFrame()
+    for exp in ['50_50', '70_30', '90_10']:
+        exp_name = f"sbm_{exp}"
+
+        df_exp = pd.read_csv(f"{exp_name}_clustering_results.csv")
+        df_dist = pd.read_csv(f"{exp_name}_distribution_of_connection_results.csv")
+
+        # Add a column to distinguish the data sets
+        df_exp['exp'] = exp_name
+
+        column_dist = []
+
+        for idx, row in df_exp.iterrows():
+            filtered_df = df_dist[(df_dist['p_within'] == row['p_within']) & (df_dist['p_between'] == row['p_between'])]
+            dist_values_list = filtered_df['connection'].tolist()
+            column_dist.append(dist_values_list)
+        df_exp['distribution'] = column_dist
+        df = df_exp if df.empty else pd.concat([df, df_exp], ignore_index=True)
+
+    df.to_csv("synthetic_exp_distribution_results.csv", index=False)
+    print(df)
+
+
+def to_float_list(value):
+    # If the value is a string representation of a list, convert it to a list
+    if isinstance(value, str):
+        value = ast.literal_eval(value)
+    # Convert list elements to floats
+    return [float(item) for item in value]
+
+
+def train_two_group_dist_model(csv_path = "synthetic_exp_distribution_results.csv"):
+    df = pd.read_csv(csv_path)
+
+    df_sc = df[df['Algorithm'] == 'spectral_clustering']
+
+    # Apply the conversion to the 'list_column'
+    df_sc['distribution'] = df_sc['distribution'].apply(to_float_list)
+
+    X = df_sc['distribution']
+    y = df_sc['ARI']
+    # # Example dataset
+    # X = [[1.2, 2.3, 3.4], [2.2, 3.5], [4.5, 5.5, 6.7, 7.8], [2.1]]
+    # y = [3.1, 2.2, 6.3, 1.1]
+
+    # Transforming variable-length lists into fixed-length features
+    # Here, we use mean and standard deviation as example features
+    X_transformed = [[np.mean(lst), np.std(lst) if len(lst) > 1 else 0] for lst in X]
+
+    # Splitting dataset into training and testing sets
+    X_train, X_test, y_train, y_test = train_test_split(X_transformed, y, test_size=0.2, random_state=42)
+
+    # Training a linear regression model
+    model = LinearRegression()
+    model.fit(X_train, y_train)
+
+    # Making predictions
+    y_pred = model.predict(X_test)
+
+    print(y_pred)
+    # Evaluating the model
+    mse = mean_squared_error(y_test, y_pred)
+    r2 = r2_score(y_test, y_pred)
+    print(f"Mean Squared Error: {mse}, R2: {r2}")
+
+def min_max_normalize(lst, min_value=0, max_value=1):
+    min_lst = min(lst)
+    max_lst = max(lst)
+    return [
+        (x - min_lst) / (max_lst - min_lst) * (max_value - min_value)
+        + min_value
+        for x in lst
+    ]
+
+def plot_distribution_train(csv_path = "synthetic_exp_distribution_results.csv", algo ="girvan_newman"):
+    df = pd.read_csv(csv_path)
+    df_sc = df[df['Algorithm'] == algo]
+
+    
+
+    def to_float_list(value):
+        # If the value is a string representation of a list, convert it to a list
+        if isinstance(value, str):
+            value = ast.literal_eval(value)
+        # Convert list elements to floats
+        return [float(item) for item in value]
+
+    # Apply the conversion to the 'list_column'
+    df_sc['distribution'] = df_sc['distribution'].apply(to_float_list)
+
+    X = df_sc['distribution']
+    y = df_sc['ARI']
+
+    X_transformed = [[np.mean(lst), np.var(lst) if len(lst) > 1 else 0] for lst in X]
+    X_means = [ item[0] for item in X_transformed ]
+    X_stds = [ item[1] for item in X_transformed ]
+
+    X_stds_normalized = [x*1000 for x in min_max_normalize(X_stds)]
+
+   # Creating the plot
+    plt.figure(figsize=(12, 8))
+    scatter = plt.scatter(X_means, y, s=X_stds_normalized, alpha=0.7)  # s controls the size of scatter points
+    plt.title('ARI Score vs Mean with Var as Size')
+    plt.xlabel('Mean')
+    plt.ylabel('ARI Score')
+
+    # Adding a colorbar to represent the std sizes, if desired
+    plt.colorbar(scatter, label='Var')
+    plt.savefig(f"ari_vs_mean(var)_distribution_study_{algo}.jpg", dpi=300)
+    # plt.show()
+
+
+
 def main():
 
     parser = argparse.ArgumentParser(description ='Community detection!!')
@@ -250,17 +369,21 @@ def main():
     # exp, save_csv_name = eval_cross_all_for_3_methods(args)
     # plot_heatmaps(save_csv_name, exp)
 
-    exp = f"sbm_{'_'.join(str(item) for item in args.sizes)}"
-    save_csv_name = f'{exp}_distribution_of_connection_results.csv'
+    # exp = f"sbm_{'_'.join(str(item) for item in args.sizes)}"
+    # save_csv_name = f'{exp}_distribution_of_connection_results.csv'
     
-    generate_all_sbm_graphs(args.sizes)
-    df = pd.read_csv(save_csv_name)
-    plot_all_connection_dist(df, exp)
+    # generate_all_sbm_graphs(args.sizes)
+    # df = pd.read_csv(save_csv_name)
+    # plot_all_connection_dist(df, exp)
 
+    # merge_clustering_results()
 
+    # train_two_group_dist_model()
+
+    for algo in ['louvain', 'girvan_newman', 'spectral_clustering']:
+        plot_distribution_train(algo=algo)
 
 if __name__ == "__main__":
-
     main() 
 
 # Example usage:

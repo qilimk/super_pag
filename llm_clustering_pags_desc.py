@@ -7,7 +7,10 @@ import random
 import hdbscan
 import time
 import itertools
+import seaborn as sns
 
+
+from scipy.stats import ttest_ind
 from collections import Counter, deque
 from sentence_transformers import SentenceTransformer, util
 from sklearn.metrics import adjusted_rand_score,  normalized_mutual_info_score
@@ -566,7 +569,6 @@ def extract_subgraph_given_nodes(G, nodes_to_extract):
 # nodes_to_extract = ['GO:0140096', 'GO:0051239']
 # extract_subgraph_given_nodes(G, nodes_to_extract)
     
-# main()
 
 # random_roots = random.sample(roots, 3)
 
@@ -576,39 +578,52 @@ def extract_subgraph_given_nodes(G, nodes_to_extract):
 #         print(f"Found a subtree rooted at '{subtree_root}' with {subtree_size} nodes.")
 #     else:
 #         print("No suitable subtree found.")
-
-def eval_on_m_type_relation(candidates):
-
-    all_nodes, true_labels_list, true_label_dict = gen_gt_binary_dataset('2024_biological_process_graph_w_verification.graphml',)
-
-    df, desc_list = find_validate_set(graph_path = 'subgraph_GO:0140096_GO:0051239.graphml')
-
-    df['KEYNAME'] = df['NAME'].str.split(" ").str[0]
-
-
-    PAGint = PAGER.pathInt(df['GS_ID']) #Get table of GS relations
-    PAG_member = PAGER.pathMember(df['GS_ID']) #Get table of GS and their Genes
-
-    array = PAGint.to_numpy() #Turn into numpy array
-    np.savetxt('data.txt', array, fmt='%s', delimiter=', ') #Print the array into 'data.txt'
-    array2 = PAG_member.to_numpy() #Turn into numpy array
-    np.savetxt('data2.txt', array2, fmt='%s', delimiter=', ') #Print the array into 'data2.txt'
-
-    #Make graph and get degrees of each node
-    G = nx.Graph()
-    for row in array:
-        node1 = row[0]
-        node2 = row[2]
-        weight = float(row[5])
-        G.add_edge(node1, node2, weight=weight)
-
-    print(G)
-    true_labels = [true_label_dict[df.loc[df['GS_ID'] == node, 'KEYNAME'].iloc[0]] for node in G.nodes()]
     
-    for algorithm in ['girvan_newman',  'louvain', 'spectral_clustering']:  #'girvan_newman',  'louvain', 
-        ari, nmi = run_eval(algorithm, G, true_labels, is_plot=True)
-        
-        print(f"{algorithm}: ARI: {ari}, NMI: {nmi}")
+def find_edges_among_neighbors(G, target_vertex):
+    """
+    Finds the edges among the neighbors of a given target vertex, excluding edges to the target vertex itself.
+    
+    Parameters:
+    - G: A NetworkX graph.
+    - target_vertex: The vertex for which neighbors' connections are analyzed.
+    
+    Returns:
+    - edges: A set of tuples where each tuple represents an edge between two neighbors of the target vertex.
+    """
+    # Find neighbors of the target vertex
+    neighbors = set(nx.neighbors(G, target_vertex))
+    print(f"the neighbors of the vertex {target_vertex}: {neighbors}")
+    
+    # Initialize an empty set to store edges among neighbors
+    edges_among_neighbors = set()
+    
+    # Check for edges among the neighbors
+    for neighbor in neighbors:
+        # For each neighbor, find its neighbors and check if they are also neighbors of the target vertex
+        for potential_neighbor_edge in nx.neighbors(G, neighbor):
+            if potential_neighbor_edge in neighbors and neighbor < potential_neighbor_edge:
+                # Add the edge if both nodes are neighbors of the target vertex (and avoid adding an edge twice)
+                edges_among_neighbors.add((neighbor, potential_neighbor_edge))
+    
+    return edges_among_neighbors, neighbors
+
+
+def read_m_type_file(txt_path="go_metadata/m_type_biological_process.txt"):
+    return pd.read_csv(txt_path, sep='\t')
+
+def convert_weighted_graph_2_non_weighted(G_weighted):
+    # Create an empty non-weighted graph
+    G_non_weighted = nx.Graph()
+
+    # Iterate through the weighted edges and add them based on their weight probability
+    for u, v, data in G_weighted.edges(data=True):
+        if np.random.rand() <= data['weight']:  # data['weight'] is treated as the probability
+            G_non_weighted.add_edge(u, v)
+
+    return G_non_weighted
+
+
+
 
 
 def find_node_levels(G, root, nodes):
@@ -694,7 +709,6 @@ def filter_exp_dataset(target_graph_path='2024_biological_process_graph_w_verifi
     print(len(exp_candidates))
     return exp_candidates
 
-import networkx as nx
 
 def gen_gt_labels(graph_path, roots_list):
 
@@ -720,26 +734,6 @@ def gen_gt_labels(graph_path, roots_list):
 
     return all_gt_nodes, labels, labels_dict
 
-
-
-def gen_gt_binary_dataset(graph_path, root1, root2):
-    G = nx.read_graphml(graph_path)
-    labels_dict = {}
-    all_gt_binary_nodes = [root1, root2]
-
-    labels_dict[root1] = 0
-    for node in nx.neighbors(G, root1):
-        labels_dict[node] = 0
-        all_gt_binary_nodes.append(node)
-
-    labels_dict[root2] = 1
-    for node in nx.neighbors(G, root2):
-        labels_dict[node] = 1
-        all_gt_binary_nodes.append(node)
-
-    labels = [labels_dict.get(node, -1) for node in sorted(all_gt_binary_nodes)]
-
-    return all_gt_binary_nodes, labels, labels_dict
 
 def find_gt_valid_set(valid_nodes):
     
@@ -779,6 +773,48 @@ def perform_clustering(algo, name, embeddings, true_labels):
 
     return ari_score, duration
 
+def eval_m_type_relation_clustering(graph_path, roots_list):
+
+    df = read_m_type_file("go_metadata/m_type_biological_process.txt")
+    valid_nodes, true_labels, true_labels_dict = gen_gt_labels(graph_path, roots_list)
+    print(len(valid_nodes))
+    nodes_dict = {f"Root{label}": root for label, root in enumerate(roots_list)}
+    filtered_df = df[df['GS_A_ID'].isin(valid_nodes) & df['GS_B_ID'].isin(valid_nodes)]
+
+    G = nx.Graph()
+    for _, row in filtered_df.iterrows():
+        G.add_edge(row['GS_A_ID'], row['GS_B_ID'], weight=row['SIMILARITY'])
+
+    # G_non_weighted = convert_weighted_graph_2_non_weighted(G)
+
+    # connection_list = find_connections(G_non_weighted)
+
+    true_labels = [true_labels_dict[node] for node in G.nodes()]
+
+    results = []
+
+    for algorithm in ['girvan_newman',  'louvain', 'spectral_clustering']:  #'girvan_newman',  'louvain', 
+        ari, nmi = run_eval(algorithm, G, true_labels, is_plot=True)
+        result_dict = {'Algorithm': algorithm, 'ARI Score': ari, 'NMI': nmi, 'Sample size': len(valid_nodes)}
+        result_dict.update(nodes_dict)
+        results.append(result_dict)
+
+    return results
+
+def find_connections(G):
+
+    connection_list = []
+    for node in G.nodes():
+        # target_vertex = int(node_id)
+        edges, neighbors = find_edges_among_neighbors(G, node)
+        number_of_neighbors = len(neighbors)
+        connection = len(edges) *2 / (number_of_neighbors*(number_of_neighbors-1))
+        connection_list.append(connection)
+
+    return connection_list
+
+
+
 def eval_llm_clustering(graph_path, roots_list):
     
     valid_nodes, true_labels, _ = gen_gt_labels(graph_path, roots_list)
@@ -813,20 +849,9 @@ def eval_llm_clustering(graph_path, roots_list):
     
     return results
 
-bp_graph_path ='2024_biological_process_graph_w_verification.graphml'
-num_of_groups = 3
-exp_candidates = filter_exp_dataset(num_of_groups=num_of_groups)
 
-results = []
-for roots in exp_candidates:
-    print(f"Roots: {roots}.")
-    results.extend(eval_llm_clustering(bp_graph_path, roots))    
 
-# Convert results to DataFrame and save to CSV
-results_df = pd.DataFrame(results)
-results_df.to_csv(f'clustering_{num_of_groups}_groups_results.csv', index=False)
-
-def ari_results_box_plots(csv_file_path = 'clustering_results.csv'):
+def ari_results_box_plots(csv_file_path = 'clustering_3_groups_results.csv'):
     
     # Read the CSV file into a DataFrame
     df = pd.read_csv(csv_file_path)
@@ -840,12 +865,146 @@ def ari_results_box_plots(csv_file_path = 'clustering_results.csv'):
     plt.xticks(rotation=60)
     plt.savefig(f"{csv_file_path.split('.')[0]}.jpg")
 
+def ari_comparison_box_plots(csv_file_path1, csv_file_path2):
+
+    # Read the CSV files into DataFrames
+    df1 = pd.read_csv(csv_file_path1)
+    df2 = pd.read_csv(csv_file_path2)
+
+    # Add a column to distinguish the data sets
+    df1['DataSet'] = 'Two Groups Dataset'
+    df2['DataSet'] = 'Three Groups Dataset'
+
+    # Concatenate the DataFrames
+    df_combined = pd.concat([df1, df2], ignore_index=True)
+    df_filtered = df_combined[df_combined['Algorithm'] != 'DBSCAN']
+
+    algorithms = df_filtered['Algorithm'].unique()
+    algo_p_value = {}
+
+    for algo in algorithms:
+
+        df_scores = df_filtered[df_filtered['Algorithm'] == algo]
+        # Compute t-test between the two groups for the selected algorithm
+        group1_scores = df_scores[df_scores['DataSet'] == 'Two Groups Dataset']['ARI Score']
+        group2_scores = df_scores[df_scores['DataSet'] == 'Three Groups Dataset']['ARI Score']
+        t_stat, p_value = ttest_ind(group1_scores, group2_scores, equal_var=False) 
+        algo_p_value[algo] = p_value
+        print(f"T-test for {algo}: t-statistic = {t_stat}, p-value = {p_value}")
+
+    # Plotting using seaborn for better control over aesthetics
+    plt.figure(figsize=(12, 6))
+    ax = sns.boxplot(data=df_filtered, x='DataSet', y='ARI Score', hue='Algorithm', width=0.6)
+    plt.title("ARI Scores Comparison")
+    # plt.xlabel('Data Set')
+    plt.ylabel('ARI Score')
+    
+    # Get current y-axis ticks and labels
+    ticks = ax.get_yticks()
+
+    # Define the maximum value you want to display on the y-axis
+    max_display_value = 1.1
+
+    # Generate new tick labels, replace those above max_display_value with an empty string
+    new_tick_labels = [str(round(tick, 1)) if tick <= max_display_value else '' for tick in ticks]
+
+    # Apply the new tick labels
+    ax.set_yticklabels(new_tick_labels)
+
+
+    # plt.xticks(rotation=60)
+    plt.legend(title='Algorithm', bbox_to_anchor=(1.05, 1), loc='upper left')
+
+    hue_order = ax.get_legend_handles_labels()[1]
+    n_hues = len(hue_order)
+
+    # Get the current color palette, assuming it has at least as many colors as there are hues
+    palette = sns.color_palette()[:n_hues]
+
+    # Map the hue order to the colors
+    hue_colors = dict(zip(hue_order, palette))
+
+    y = df_filtered['ARI Score'].max()
+    h = 0.1
+    # Optionally, print or return the color for each hue level (Algorithm)
+    for idx, (algo, col) in enumerate(hue_colors.items()):
+        plt.plot([ -0.2+idx*0.2, -0.2+idx*0.2 , 0.8 + idx*0.2 , 0.8 + idx*0.2 ], 
+                 [y+0.05, y+0.2+h*idx, y+0.2+ h*idx, y+0.05], 
+                 lw=1.5, c=col)
+        plt.text(0.35+idx*0.2, y+0.2+h*idx, f"p = {algo_p_value[algo]:.4f}", ha='center', va='bottom', color=col)
+        print(f"Algorithm: {algo}, Color: {col}")
+
+    # Save the plot
+    plt.savefig("ari_scores_comparison.jpg", bbox_inches='tight')
+    plt.show()
+    
+
+# Example usage
+# ari_comparison_box_plots('clustering_results.csv', 'clustering_3_groups_results.csv')
+
+def plot_algorithm_comparison_with_ttest_and_line(csv_file_path1, csv_file_path2, algorithm_name):
+    # Load the datasets
+    df1 = pd.read_csv(csv_file_path1)
+    df2 = pd.read_csv(csv_file_path2)
+    
+    # Add an identifier for the dataset
+    df1['DataSet'] = 'Set 1'
+    df2['DataSet'] = 'Set 2'
+    
+    # Combine the datasets
+    df_combined = pd.concat([df1, df2], ignore_index=True)
+    
+    # Filter by the algorithm of interest
+    df_filtered = df_combined[df_combined['Algorithm'] == algorithm_name]
+    
+    # Compute t-test between the two groups for the selected algorithm
+    group1_scores = df_filtered[df_filtered['DataSet'] == 'Set 1']['ARI Score']
+    group2_scores = df_filtered[df_filtered['DataSet'] == 'Set 2']['ARI Score']
+    t_stat, p_value = ttest_ind(group1_scores, group2_scores, equal_var=False)  # Assumes unequal variances
+    print(f"T-test for {algorithm_name}: t-statistic = {t_stat}, p-value = {p_value}")
+    
+    # Plotting
+    plt.figure(figsize=(8, 6))
+    sns.boxplot(x='DataSet', y='ARI Score', data=df_filtered)
+    plt.title(f"ARI Scores Comparison for {algorithm_name}")
+    plt.xlabel('Data Set')
+    plt.ylabel('ARI Score')
+    
+    # Drawing the linked line and showing the p-value
+    y, h, col = df_filtered['ARI Score'].max() + 0.05, 0.02, 'k'
+    plt.plot([0, 0, 1, 1], [y, y+h, y+h, y], lw=1.5, c=col)
+    plt.text(0.5, y+h, f"p = {p_value:.4f}", ha='center', va='bottom', color=col)
+    
+    plt.tight_layout()
+    plt.show()
+
+# plot_algorithm_comparison_with_ttest_and_line('clustering_results.csv', 'clustering_3_groups_results.csv', 'K-Means')
+
+
+
 # ari_results_box_plots()
+
+def main():
+    bp_graph_path ='2024_biological_process_graph_w_verification.graphml'
+    num_of_groups = 2
+    exp_candidates = filter_exp_dataset(num_of_groups=num_of_groups)
+
+    results = []
+    for roots in exp_candidates[:10]:
+        print(f"Roots: {roots}.")
+        # results.extend(eval_llm_clustering(bp_graph_path, roots)) 
+        results.extend(eval_m_type_relation_clustering(bp_graph_path, roots))   
+
+    # Convert results to DataFrame and save to CSV
+    results_df = pd.DataFrame(results)
+    results_df.to_csv(f'm-type_clustering_{num_of_groups}_groups_results.csv', index=False)
+
+# read_m_type_file()
+main()
 
 
         
-# eval_on_m_type_relation()
-# main()
+
 
 
 
