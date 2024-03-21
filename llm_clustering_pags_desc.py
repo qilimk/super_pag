@@ -8,6 +8,7 @@ import hdbscan
 import time
 import itertools
 import seaborn as sns
+import argparse
 
 
 from scipy.stats import ttest_ind
@@ -985,8 +986,13 @@ def plot_algorithm_comparison_with_ttest_and_line(csv_file_path1, csv_file_path2
 # ari_results_box_plots()
 
 def main():
+
+    parser = argparse.ArgumentParser(description ='LLM embedding clustering')
+    parser.add_argument('--num', type=int, default=2, help ='the number of groups for the evaluation')
+    
+    args = parser.parse_args()
     bp_graph_path ='2024_biological_process_graph_w_verification.graphml'
-    num_of_groups = 2
+    num_of_groups = args.num
     exp_candidates = filter_exp_dataset(num_of_groups=num_of_groups)
 
     results = []
@@ -1000,7 +1006,12 @@ def main():
     results_df.to_csv(f'm-type_clustering_{num_of_groups}_groups_results.csv', index=False)
 
 # read_m_type_file()
-main()
+    
+if __name__ == "__main__":
+    main() 
+
+
+
 
 
         
